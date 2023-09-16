@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pays', function (Blueprint $table) {
             $table->id();
-            $table->double('amout',8,2);
+            $table->double('amount',8,2);
             $table->foreignId('debt_id');
             $table->timestamps();
         });
