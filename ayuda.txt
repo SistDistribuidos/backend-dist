@@ -1,5 +1,0 @@
-para correr solo los seeder
-    php artisan db:seed
-
-para borrar base datos y migrar seeder
-    php artisan migrate:fresh --seed
