@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PayController;
+use App\Http\Controllers\DebtController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,3 +20,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/pay-debt', [PayController::class, 'payDebt']);
+Route::get('/get-debt', [DebtController::class, 'getDebt']);
+Route::get('/get-users', [UserController::class, 'getUsers']);
