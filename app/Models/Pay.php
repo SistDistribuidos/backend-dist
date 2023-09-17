@@ -15,6 +15,14 @@ class Pay extends Model
         'debt_id',
     ];
 
+    public static function rules()
+    {
+        return [
+            'amount' => 'required|numeric|gt:0',
+            'debt_id' => 'required|numeric'
+        ];
+    }
+
     public function debt(): BelongsTo
     {
         return $this->belongsTo(Debt::class);

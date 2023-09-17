@@ -17,6 +17,13 @@ class Debt extends Model
         'user_id',
     ];
 
+    public static function rules()
+    {
+        return [
+            'user_id' => 'required|numeric'
+        ];
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
