@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('debts', function (Blueprint $table) {
             $table->id();
             $table->double('amount', 8, 2);
+            $table->double('amount_paid', 8, 2)->default(0);
             $table->boolean('state')->default(0);
             $table->foreignId('user_id');
             $table->timestamps();

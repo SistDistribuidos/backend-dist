@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use App\Models\Pay;
 use App\Models\Debt;
+use Illuminate\Support\Facades\DB;
 
 class PayController extends Controller
 {
@@ -19,26 +20,17 @@ class PayController extends Controller
 
             if ($debt->state)
               return $this->handleException('request cannot be made, debt paid', 422);
-
-            if ($validateData['amount'] > $debt->amount)
+            
+            if ( $debt->amount_paid + $validateData['amount'] > $debt->amount )
               return $this->handleException('request cannot be made, the payment exceeds the debt', 422);
-
             try {
-                $amount = $validateData['amount'];
-                $debt->amount = $debt->amount - $amount;
-                if ($debt->amount == 0)
-                  $debt->state = true;
-                $debt->save();
-
-                $pay = new Pay();
-                $pay->amount = $validateData['amount'];
-                $pay->debt_id = $validateData['debt_id'];
-                $pay->save();
+                // Llamada al procedimiento almacenado
+                $result = DB::select('SELECT * FROM update_debt(?, ?, ?)', [$validateData['debt_id'], $validateData['amount'], $debt->amount_paid + $validateData['amount'] == $debt->amount]);
 
                 return response()->json([
                     'message' => 'payment successfully registered',
-                    'payment' => $pay,
-                    'debt' =>$debt
+                    'payment' => $validateData['amount'],
+                    'debt' => $result[0]
                 ],201);
             } catch (QueryException $e) {
                 return $this->handleException('Failed to execute query', 500);
