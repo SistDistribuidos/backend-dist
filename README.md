@@ -76,3 +76,41 @@ to delete all database and run seeders
 ```
 php artisan migrate:fresh --seed
 ```
+
+
+-- to execute the stored procedure
+--run the script in postgresql
+-- Crear la función con un parámetro decimal(8,2)
+CREATE OR REPLACE FUNCTION update_debt(id_param INT, cantidad_param NUMERIC(8,2), state_debt BOOLEAN) RETURNS debts AS $$
+DECLARE
+    updated_row debts;
+BEGIN
+	 IF state_debt 
+	 THEN
+			UPDATE debts
+			SET amount_paid = amount_paid + cantidad_param,
+			 state = true
+			WHERE id = id_param;
+    ELSE
+			UPDATE debts
+			SET amount_paid = amount_paid + cantidad_param
+			WHERE id = id_param;
+    END IF;
+	-- Insertar nuevos datos en la tabla "pays"
+    INSERT INTO pays (amount, debt_id)
+    VALUES (cantidad_param, id_param); -- Ejemplo de datos, ajusta según tus necesidades
+    
+    -- Selecciona la fila actualizada
+    SELECT * INTO updated_row
+    FROM debts
+    WHERE id = id_param
+	ORDER BY id ASC 
+	LIMIT 1;
+	
+    RETURN updated_row;
+END;
+$$ LANGUAGE plpgsql;
+
+to delete stored procedure
+-- Eliminar el procedimiento almacenado
+DROP FUNCTION IF EXISTS update_debt(INT, NUMERIC(8,2), BOOLEAN);
