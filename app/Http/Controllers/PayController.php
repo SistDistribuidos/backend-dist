@@ -7,6 +7,7 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Pay;
 use App\Models\Debt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PayController extends Controller
 {
@@ -18,14 +19,21 @@ class PayController extends Controller
             if (!$debt)
               return $this->handleException('Debt not found', 400);
 
-            if ($debt->state)
-              return $this->handleException('request cannot be made, debt paid', 422);
+            if ($debt->state){
+                return $this->handleException('request cannot be made, debt paid', 422);
+            }
             
-            if ( $debt->amount_paid + $validateData['amount'] > $debt->amount )
-              return $this->handleException('request cannot be made, the payment exceeds the debt', 422);
+            $amount =  $debt->amount_paid + $validateData['amount'];
+            $pago =  $validateData['amount'];
+            $difference = $amount - $debt->amount;
+
+            if ( $amount > $debt->amount && $difference >= 1 ){
+                return $this->handleException('request cannot be made, the payment exceeds the debt', 422);
+            }
+              
             try {
                 // Llamada al procedimiento almacenado
-                $result = DB::select('SELECT * FROM update_debt(?, ?, ?)', [$validateData['debt_id'], $validateData['amount'], $debt->amount_paid + $validateData['amount'] == $debt->amount]);
+                $result = DB::select('SELECT * FROM update_debt(?, ?, ?)', [$validateData['debt_id'], $validateData['amount'], $difference >= 0]);
 
                 return response()->json([
                     'message' => 'payment successfully registered',
