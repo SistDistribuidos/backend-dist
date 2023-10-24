@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     function getUsers(){
 
-        async_function::dispatch('probando xdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+        // async_function::dispatch('probando xdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
 
         $users = User::all();
         return response()->json([
