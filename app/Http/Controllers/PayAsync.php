@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\async_function;
 use Illuminate\Http\Request;
 
 class PayAsync extends Controller
@@ -13,7 +14,7 @@ class PayAsync extends Controller
         async_function::dispatch($inputs);
         return response()->json([
             'message' => 'Su solicitud fue recibida Con exito'
-        ], $code);
+        ], 200);
        
         
     }
