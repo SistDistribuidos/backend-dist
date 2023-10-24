@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PayController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -33,10 +34,11 @@ class async_function implements ShouldQueue
     {
         //
         $data = $this->data;
+        
         sleep(2);
         echo 'job function';
-        $data = new UserController();
-        $response = $data->callback();
+        $pay = new PayController();
+        $response = $pay->payDebt2($data);
         
         echo '==>==>>>>>>>>>',  $response;
         Log::info('ingresa job mostrando' . $response);

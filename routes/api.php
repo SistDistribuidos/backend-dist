@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PayController;
 use App\Http\Controllers\DebtController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PayAsync;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/pay-debt', [PayController::class, 'payDebt']);
 Route::get('/get-debt', [DebtController::class, 'getDebt']);
 Route::get('/get-users', [UserController::class, 'getUsers']);
+Route::post('/pay-async',[PayAsync::class],'payAsync');
